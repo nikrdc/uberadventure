@@ -41,7 +41,7 @@ categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
 # Forms
 
 class RequestForm(Form):
-    amount = IntegerField('Amount', validators=[Required()])
+    amount = IntegerField('Amount', validators=[Required()], default=7)
     latitude = DecimalField('Latitude', validators=[Required()])
     longitude = DecimalField('Longitude', validators=[Required()])
     submit = SubmitField('Go')
@@ -50,7 +50,7 @@ class RequestForm(Form):
 
 # Routes
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
 	form = RequestForm()
 	if form.validate_on_submit():
@@ -64,7 +64,6 @@ def index():
 		}
 		product_response = requests.get(product_url, params=product_parameters)
 		product_data = product_response.json()
-		json.loads(product_data)
 		price_details = product_data['products'][0]['price_details']
 		service_fees = 0
 		for fee in price_details['service_fees']:
@@ -73,7 +72,7 @@ def index():
 		radius_miles = travel_money / (price_details['cost_per_distance'] + 
 								 	   price_details['cost_per_minute'] * 3)
 		radius_meters = radius_miles * 1609
-		latlong=start_lat+', '+start_lon
+		latlong=str(start_lat)+', '+str(start_lon)
 		town = str(nomrev.query(lat=start_lat, 
 								lon=start_lon)['address']['city'])
 		yelp_data = yelp_api.search_query(location=town, 
@@ -83,7 +82,7 @@ def index():
 							  			  cll=latlong)
 		destinations = yelp_data['businesses']
 		i = 0
-		while destinations[i]['rating'] > 4:
+		while (i < len(destinations)) and (destinations[i]['rating'] > 4):
 			i += 1
 		destinations = destinations[:i]
 		high_estimate = 11

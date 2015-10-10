@@ -1,3 +1,46 @@
 {% extends "base.html" %}
 {% block body %}
+	<form method="POST" id="form">
+        {{ form.csrf_token }}
+
+        {{ form.amount.label }}<br>
+        {{ form.amount() }}<br>
+        {% if form.amount.errors %}
+            {% for error in form.amount.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {{ form.latitude() }}<br>
+        {{ form.longitude() }}<br>
+
+        {{ form.submit() }}
+    </form>
+
+    <button id="super_submit" onclick="getLocation()">Go</button>
+
+    <p id="unsupported"></p>
+
+	<script>
+	var us = document.getElementById("unsupported");
+	var lat = document.getElementById("latitude");
+	var lon = document.getElementById("longitude");
+	var ss = document.getElementById("super_submit");
+	var submit = document.getElementById("submit");
+
+	function getLocation() {
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(showPositionAndSubmit);
+	    } else { 
+	        us.innerHTML = "Geolocation is not supported by this browser.";
+	    }
+	}
+
+	function showPositionAndSubmit(position) {
+	    lat.value = position.coords.latitude;
+	    lon.value = position.coords.longitude;
+	    submit.click();
+	}
+	</script>
+
 {% endblock %}
