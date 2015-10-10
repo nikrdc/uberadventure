@@ -60,7 +60,7 @@ def index():
 		product_parameters = {
 		    'server_token': config.UBER_SERVER_TOKEN,
 		    'latitude': start_lat,
-		    'longitude': start_lon,
+		    'longitude': start_lon
 		}
 		product_response = requests.get(product_url, params=product_parameters)
 		product_data = product_response.json()
@@ -93,19 +93,34 @@ def index():
 			if destinations:
 				chosen = random.choice(destinations)
 			else:
-				return render_template('boom.html', found=False, chosen=None)
+				return render_template('womp.html')
 			price_url = 'https://api.uber.com/v1/estimates/price'
+			chosen_lat = chosen['location']['coordinate']['latitude']
+			chosen_lon = chosen['location']['coordinate']['longitude']
 			price_parameters = {
-				'server_token': '0tGY3guCZLpjknxJgwzwCAx8YBxPC0eN2hWCb4io',
-				'start_latitude': '37.870596024328044',
-				'start_longitude': '-122.25148560974111',
-				'end_latitude': chosen['location']['coordinate']['latitude'],
-				'end_longitude': chosen['location']['coordinate']['longitude']
+				'server_token': config.UBER_SERVER_TOKEN,
+				'start_latitude': start_lat,
+				'start_longitude': start_lon,
+				'end_latitude': chosen_lat,
+				'end_longitude': chosen_lon
 			}
 			price_response = requests.get(price_url, params=price_parameters)
 			price_data = price_response.json()
+			product_id = price_data['prices'][0]['product_id']
 			high_estimate = price_data['prices'][0]['high_estimate']
-		return render_template('boom.html', found=True, chosen=chosen)
+		chosen_name = chosen['name'].replace(' ', '%20')
+		d_cost = price_data['prices'][0]['estimate']
+		d_address = ' '.join(chosen['location']['display_address'])
+		chosen_address = '%20'.join(chosen['location']['display_address']).replace(' ','%20')
+		deep_link = "uber://?client_id="+config.UBER_CLIENT_ID+\
+					"&action=setPickup&pickup=my_location&dropoff[latitude]="+\
+					str(chosen_lat)+"&dropoff[longitude]="+str(chosen_lon)+\
+					"&dropoff[nickname]="+chosen_name+\
+					"&dropoff[formatted_address]="+chosen_address+\
+					"&product_id="+product_id
+		return render_template('boom.html', deep_link=deep_link, 
+							   d_name=chosen['name'], d_address=d_address,
+							   d_cost=d_cost)
 	else:
 		return render_template('index.html', form=form)
 		
