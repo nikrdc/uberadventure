@@ -99,7 +99,6 @@ def index():
 		destinations = yelp_data['businesses'] + yelp_data2['businesses']
 		i = 0
 		while (i < len(destinations)) and (destinations[i]['rating'] > 3.5):
-			print destinations[i]['name']
 			i += 1
 		destinations = destinations[:i]
 		high_estimate = amount + 1
