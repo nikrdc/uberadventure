@@ -87,10 +87,19 @@ def index():
 										  sort=2,
 										  category_filter=categories,
 										  radius_filter=radius_meters,
-							  			  cll=latlong)
-		destinations = yelp_data['businesses']
+							  			  cll=latlong,
+							  			  limit=20)
+		yelp_data2 = yelp_api.search_query(location=town, 
+										   sort=2,
+										   category_filter=categories,
+										   radius_filter=radius_meters,
+							  			   cll=latlong,
+							  			   limit=20,
+							  			   offset=20)
+		destinations = yelp_data['businesses'] + yelp_data2['businesses']
 		i = 0
-		while (i < len(destinations)) and (destinations[i]['rating'] > 4):
+		while (i < len(destinations)) and (destinations[i]['rating'] > 3.5):
+			print destinations[i]['name']
 			i += 1
 		destinations = destinations[:i]
 		high_estimate = amount + 1
@@ -117,7 +126,6 @@ def index():
 			product_id = price_data['prices'][0]['product_id']
 			high_estimate = price_data['prices'][0]['high_estimate']
 		chosen_name = chosen['name'].replace(' ', '%20')
-		d_cost = price_data['prices'][0]['estimate']
 		d_address = ' '.join(chosen['location']['display_address'])
 		chosen_address = '%20'.join(chosen['location']['display_address']).replace(' ','%20')
 		deep_link = "uber://?client_id="+config.UBER_CLIENT_ID+\
@@ -130,11 +138,10 @@ def index():
 							   deep_link=deep_link, 
 							   d_name=chosen['name'], 
 							   d_address=d_address,
-							   d_cost=d_cost, 
+							   d_cost=price_data['prices'][0]['estimate'], 
 							   d_rating=chosen['rating'],
 							   d_url=chosen['mobile_url'],
-							   d_product=price_data['prices'][0]['display_name'],
-							  )
+							   d_product=price_data['prices'][0]['display_name'])
 	else:
 		return render_template('index.html', form=form)
 		
