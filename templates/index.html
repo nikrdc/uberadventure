@@ -4,7 +4,7 @@
 	<form method="POST" id="form">
         {{ form.csrf_token }}
 
-        <div class="budget">${{ form.amount() }}</div><br>
+        <div class="budget">${{ form.amount(type="number", pattern="\d*") }}</div><br>
         {% if form.amount.errors %}
             {% for error in form.amount.errors %}
                 <div class="error">{{ error }}</div>

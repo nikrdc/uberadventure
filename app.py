@@ -129,7 +129,7 @@ def index():
 							   d_cost=d_cost, 
 							   d_rating=chosen['rating'],
 							   d_url=chosen['mobile_url'],
-							   d_product=price_data['prices'][0]['display_name']
+							   d_product=price_data['prices'][0]['display_name'],
 							  )
 	else:
 		return render_template('index.html', form=form)
