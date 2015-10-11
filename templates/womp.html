@@ -1,3 +1,5 @@
 {% extends "base.html" %}
 {% block body %}
+	<div class="uhoh">We couldn't find a destination for you!</div>
+	<a href="{{ url_for('index') }}"><button class="super_submit">Try again?</button></a>
 {% endblock %}

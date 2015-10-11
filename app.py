@@ -25,6 +25,10 @@ def make_shell_context():
     return dict(app=app)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 yelp_api = YelpAPI(config.YELP_CONSUMER_KEY, config.YELP_CONSUMER_SECRET, 
 				   config.YELP_TOKEN, config.YELP_TOKEN_SECRET)
 
