@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block body %}
-<a href="{{ deep_link }}">Go</a>
+<div class="intro">Whisk me away to...</div>
+<a class="name" href="{{ d_url }}">{{ d_name }}</a>
+<div class="address">{{ d_address }}</div>
+<div class="rating">{{ d_rating }}/5 Yelp rating</div>
+<div class="cost">{{ d_cost }} estimated {{ d_product }} fare</div>
+<a href="{{ deep_link }}"><button class="super_submit">Request Uber</button></a>
+<div class="refresh">Hit refresh to try again!</div>
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block body %}
+	<div class="feature">Go on an adventure with <a class="youber" href="https://www.uber.com">Uber</a> for under:</div>
 	<form method="POST" id="form">
         {{ form.csrf_token }}
 
-        {{ form.amount.label }}<br>
-        {{ form.amount() }}<br>
+        <div class="budget">${{ form.amount() }}</div><br>
         {% if form.amount.errors %}
             {% for error in form.amount.errors %}
                 <div class="error">{{ error }}</div>
@@ -17,7 +17,7 @@
         {{ form.submit() }}
     </form>
 
-    <button id="super_submit" onclick="getLocation()">Go</button>
+    <button class="super_submit" onclick="getLocation()">Whisk me away</button>
 
     <p id="unsupported"></p>
 
@@ -25,7 +25,6 @@
 	var us = document.getElementById("unsupported");
 	var lat = document.getElementById("latitude");
 	var lon = document.getElementById("longitude");
-	var ss = document.getElementById("super_submit");
 	var submit = document.getElementById("submit");
 
 	function getLocation() {

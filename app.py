@@ -8,7 +8,7 @@ from nominatim import NominatimReverse
 from flask import Flask, render_template 
 from flask.ext.wtf import Form
 from wtforms import IntegerField, DecimalField, SubmitField
-from wtforms.validators import Required
+from wtforms.validators import Required, NumberRange
 from flask.ext.script import Manager, Shell, Server
 
 
@@ -32,16 +32,19 @@ nomrev = NominatimReverse()
 
 categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
 			 'hiking,lakes,parks,skatingrinks,skydiving,zoos,arcades,'+\
-			 'galleries,gardens,movietheaters,festivals,jazzandblues,'+\
-			 'museums,musicvenues,observatories,opera,theater,planetarium,'+\
-			 'psychic_astrology'
+			 'gardens,movietheaters,festivals,jazzandblues,museums,'+\
+			 'musicvenues,observatories,opera,planetarium,psychic_astrology,'+\
+			 'bars,comedyclubs,danceclubs,karaoke,poolhalls,fleamarkets'
 
 
 
 # Forms
 
 class RequestForm(Form):
-    amount = IntegerField('Amount', validators=[Required()], default=7)
+    amount = IntegerField('Amount', validators=[
+    	Required(message="Choose a number from 0 to 50"), 
+    	NumberRange(min=1, max=50, message="Choose a number from 0 to 50")], 
+    	default=7)
     latitude = DecimalField('Latitude', validators=[Required()])
     longitude = DecimalField('Longitude', validators=[Required()])
     submit = SubmitField('Go')
@@ -54,6 +57,7 @@ class RequestForm(Form):
 def index():
 	form = RequestForm()
 	if form.validate_on_submit():
+		amount = form.amount.data
 		start_lat = form.latitude.data
 		start_lon = form.longitude.data
 		product_url = 'https://api.uber.com/v1/products'
@@ -68,7 +72,7 @@ def index():
 		service_fees = 0
 		for fee in price_details['service_fees']:
 			service_fees += fee['fee']
-		travel_money = form.amount.data - price_details['base'] - service_fees
+		travel_money = amount - price_details['base'] - service_fees
 		radius_miles = travel_money / (price_details['cost_per_distance'] + 
 								 	   price_details['cost_per_minute'] * 3)
 		radius_meters = radius_miles * 1609
@@ -85,10 +89,10 @@ def index():
 		while (i < len(destinations)) and (destinations[i]['rating'] > 4):
 			i += 1
 		destinations = destinations[:i]
-		high_estimate = 11
+		high_estimate = amount + 1
 		destinations.append(None)
 		chosen = None
-		while high_estimate > 10:
+		while high_estimate > amount:
 			destinations.remove(chosen)
 			if destinations:
 				chosen = random.choice(destinations)
@@ -118,9 +122,15 @@ def index():
 					"&dropoff[nickname]="+chosen_name+\
 					"&dropoff[formatted_address]="+chosen_address+\
 					"&product_id="+product_id
-		return render_template('boom.html', deep_link=deep_link, 
-							   d_name=chosen['name'], d_address=d_address,
-							   d_cost=d_cost)
+		return render_template('boom.html', 
+							   deep_link=deep_link, 
+							   d_name=chosen['name'], 
+							   d_address=d_address,
+							   d_cost=d_cost, 
+							   d_rating=chosen['rating'],
+							   d_url=chosen['mobile_url'],
+							   d_product=price_data['prices'][0]['display_name']
+							  )
 	else:
 		return render_template('index.html', form=form)
 		
