@@ -47,8 +47,8 @@ categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
 class RequestForm(Form):
     amount = IntegerField('Amount', validators=[
     	Required(message="Choose a number from 0 to 50"), 
-    	NumberRange(min=1, max=50, message="Choose a number from 0 to 50")], 
-    	default=7)
+    	NumberRange(min=1, max=50, message="Choose a number from 0 to 50"),], 
+    	default=7,)
     latitude = DecimalField('Latitude', validators=[Required()])
     longitude = DecimalField('Longitude', validators=[Required()])
     submit = SubmitField('Go')
@@ -68,7 +68,7 @@ def index():
 		product_parameters = {
 		    'server_token': config.UBER_SERVER_TOKEN,
 		    'latitude': start_lat,
-		    'longitude': start_lon
+		    'longitude': start_lon,
 		}
 		product_response = requests.get(product_url, params=product_parameters)
 		product_data = product_response.json()
@@ -88,14 +88,14 @@ def index():
 										  category_filter=categories,
 										  radius_filter=radius_meters,
 							  			  cll=latlong,
-							  			  limit=20)
+							  			  limit=20,)
 		yelp_data2 = yelp_api.search_query(location=town, 
 										   sort=2,
 										   category_filter=categories,
 										   radius_filter=radius_meters,
 							  			   cll=latlong,
 							  			   limit=20,
-							  			   offset=20)
+							  			   offset=20,)
 		destinations = yelp_data['businesses'] + yelp_data2['businesses']
 		i = 0
 		while (i < len(destinations)) and (destinations[i]['rating'] > 3.5):
@@ -118,7 +118,7 @@ def index():
 				'start_latitude': start_lat,
 				'start_longitude': start_lon,
 				'end_latitude': chosen_lat,
-				'end_longitude': chosen_lon
+				'end_longitude': chosen_lon,
 			}
 			price_response = requests.get(price_url, params=price_parameters)
 			price_data = price_response.json()
@@ -140,7 +140,7 @@ def index():
 							   d_cost=price_data['prices'][0]['estimate'], 
 							   d_rating=chosen['rating'],
 							   d_url=chosen['mobile_url'],
-							   d_product=price_data['prices'][0]['display_name'])
+							   d_product=price_data['prices'][0]['display_name'],)
 	else:
 		return render_template('index.html', form=form)
 		

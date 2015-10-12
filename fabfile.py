@@ -14,7 +14,7 @@ def dependencies():
         run('pip install -r requirements.txt')
 
 def deploy():
-    with cd('~/devaffair'):
+    with cd('~/uberadventure'):
         run('git pull origin master')
         dependencies()
 
