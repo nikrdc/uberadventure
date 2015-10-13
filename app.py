@@ -10,13 +10,14 @@ from flask.ext.wtf import Form
 from wtforms import IntegerField, DecimalField, SubmitField
 from wtforms.validators import Required, NumberRange
 from flask.ext.script import Manager, Shell, Server
+from time import time
 
 
 
 # Config
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 app.config['SECRET_KEY'] = config.SECRET_KEY
 
 manager = Manager(app)
@@ -46,8 +47,8 @@ categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
 
 class RequestForm(Form):
     amount = IntegerField('Amount', validators=[
-    	Required(message="Choose a number from 0 to 50"), 
-    	NumberRange(min=1, max=50, message="Choose a number from 0 to 50"),], 
+    	Required(message="Choose a number from 1 to 50"), 
+    	NumberRange(min=1, max=50, message="Choose a number from 1 to 50"),], 
     	default=7,)
     latitude = DecimalField('Latitude', validators=[Required()])
     longitude = DecimalField('Longitude', validators=[Required()])
@@ -89,14 +90,7 @@ def index():
 										  radius_filter=radius_meters,
 							  			  cll=latlong,
 							  			  limit=20,)
-		yelp_data2 = yelp_api.search_query(location=town, 
-										   sort=2,
-										   category_filter=categories,
-										   radius_filter=radius_meters,
-							  			   cll=latlong,
-							  			   limit=20,
-							  			   offset=20,)
-		destinations = yelp_data['businesses'] + yelp_data2['businesses']
+		destinations = yelp_data['businesses']
 		if len(destinations) == 0:
 			return render_template('womp.html')
 		i = 0
