@@ -39,7 +39,7 @@ categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
 			 'hiking,lakes,parks,skatingrinks,skydiving,zoos,arcades,'+\
 			 'gardens,movietheaters,festivals,jazzandblues,museums,'+\
 			 'musicvenues,observatories,opera,planetarium,psychic_astrology,'+\
-			 'bars,comedyclubs,danceclubs,karaoke,poolhalls,fleamarkets'
+			 'bars,comedyclubs,danceclubs,karaoke,poolhalls,fleamarkets,food'
 
 
 
