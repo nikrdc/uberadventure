@@ -91,8 +91,6 @@ def index():
 							  			  cll=latlong,
 							  			  limit=20,)
 		destinations = yelp_data['businesses']
-		if len(destinations) == 0:
-			return render_template('womp.html')
 		i = 0
 		while (i < len(destinations)) and (destinations[i]['rating'] > 3.5):
 			i += 1
@@ -102,10 +100,11 @@ def index():
 		chosen = None
 		while high_estimate > amount:
 			destinations.remove(chosen)
-			if destinations:
+			if len(destinations) > 0:
 				chosen = random.choice(destinations)
 			else:
 				return render_template('womp.html')
+			# coordinates sometime not available
 			price_url = 'https://api.uber.com/v1/estimates/price'
 			chosen_lat = chosen['location']['coordinate']['latitude']
 			chosen_lon = chosen['location']['coordinate']['longitude']
