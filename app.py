@@ -35,10 +35,10 @@ yelp_api = YelpAPI(config.YELP_CONSUMER_KEY, config.YELP_CONSUMER_SECRET, config
 
 nomrev = NominatimReverse()
 
-categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,'+\
-             'hiking,lakes,parks,skatingrinks,skydiving,zoos,arcades,'+\
-             'gardens,movietheaters,festivals,jazzandblues,museums,'+\
-             'musicvenues,observatories,opera,planetarium,psychic_astrology,'+\
+categories = 'amusementparks,aquariums,beaches,bowling,escapegames,gokarts,' +\
+             'hiking,lakes,parks,skatingrinks,skydiving,zoos,arcades,' +\
+             'gardens,movietheaters,festivals,jazzandblues,museums,' +\
+             'musicvenues,observatories,opera,planetarium,psychic_astrology,' +\
              'bars,comedyclubs,danceclubs,karaoke,poolhalls,fleamarkets,food'
 
 
@@ -131,13 +131,13 @@ def index():
                     "&dropoff[formatted_address]=" + chosen_address +\
                     "&product_id="+product_id
         return render_template('boom.html', 
-                                deep_link=deep_link, 
-                                d_name=chosen['name'], 
-                                d_address=d_address,
-                                d_cost=price_data['prices'][0]['estimate'],
-                                d_rating=chosen['rating'],
-                                d_url=chosen['mobile_url'],
-                                d_product=price_data['prices'][0]['display_name'],)
+                               deep_link=deep_link, 
+                               d_name=chosen['name'], 
+                               d_address=d_address,
+                               d_cost=price_data['prices'][0]['estimate'],
+                               d_rating=chosen['rating'],
+                               d_url=chosen['mobile_url'],
+                               d_product=price_data['prices'][0]['display_name'],)
     else:
         return render_template('index.html', form=form)
         
