@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-	<div class="feature">Go on an adventure with <a class="youber" href="https://www.uber.com">Uber</a> for under</div>
-	<form method="POST" id="form">
+    <div class="feature">Go on an adventure with <a class="youber" href="https://www.uber.com">Uber</a> for under</div>
+    <form method="POST" id="form">
         {{ form.csrf_token }}
 
         <div class="budget">${{ form.amount(type="number", pattern="\d*") }}</div><br>
@@ -21,24 +21,24 @@
 
     <p id="unsupported"></p>
 
-	<script>
-	var us = document.getElementById("unsupported");
-	var lat = document.getElementById("latitude");
-	var lon = document.getElementById("longitude");
-	var submit = document.getElementById("submit");
+    <script>
+        var us = document.getElementById("unsupported");
+        var latitude = document.getElementById("latitude");
+        var longitude = document.getElementById("longitude");
+        var submit = document.getElementById("submit");
 
-	function getLocation() {
-	    if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(showPositionAndSubmit);
-	    } else { 
-	        us.innerHTML = "Geolocation is not supported by this browser.";
-	    }
-	}
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPositionAndSubmit);
+            } else { 
+                us.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
 
-	function showPositionAndSubmit(position) {
-	    lat.value = position.coords.latitude;
-	    lon.value = position.coords.longitude;
-	    submit.click();
-	}
-	</script>
+        function showPositionAndSubmit(position) {
+            latitude.value = position.coords.latitude;
+            longitude.value = position.coords.longitude;
+            submit.click();
+        }
+    </script>
 {% endblock %}
